@@ -34,16 +34,16 @@
  #########################
 
  # ----- GitHub details -----
- GITHUB_REPO="user/repo"     # <--- change to your repo
- RECIPIENTS="e@mail.com"
+ GITHUB_REPO="${GITHUB_REPO:-user/repo}"     # <--- change to your repo
+ RECIPIENTS="${RECIPIENTS:-e@mail.com}"
  API_TOKEN="${GITHUB_API_TOKEN:-}"   # optional PAT (needs repo:status)
- BASE_URL="https://api.github.com"
+ BASE_URL="${BASE_URL:-https://api.github.com}"
 
  # ----- Build directories -----
- REPO_DIR="/path/to/repo/$(basename "$GITHUB_REPO")"
- BUILD_DIR="$REPO_DIR/build"
- LOG_FILE="/tmp/build_check.log"
- JOBS=12
+ REPO_DIR="${REPO_DIR:-/path/to/repo/$(basename "$GITHUB_REPO")}"
+ BUILD_DIR="${BUILD_DIR:-$REPO_DIR/build}"
+ LOG_FILE="${LOG_FILE:-/tmp/build_check.log}"
+ JOBS=${JOBS:-12}
 
  #########################
  ## Helper functions

@@ -145,7 +145,7 @@ send_email() {
  fi
 
  # If the checks passed, run local build
- if configure_and_build; then
+ if ! configure_and_build; then
      exit 1
      # send_email "✅ Build succeeded on $(hostname)" \
      #     "The daily build for ${GITHUB_REPO} finished successfully.\n\nSee $LOG_FILE for details."

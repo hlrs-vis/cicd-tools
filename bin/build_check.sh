@@ -52,7 +52,7 @@
  ## Helper functions
  #########################
  print_last_result() {
-    if [[ -f "$LOG_FILE" ]] then
+    if [[ -f "$LOG_FILE" ]]; then
         tail -n 1 "$LOG_FILE"
     else
         echo "No log file found. Have you run the script yet?"

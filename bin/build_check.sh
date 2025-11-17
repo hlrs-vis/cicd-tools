@@ -7,13 +7,6 @@
  #  If the checks pass, it pulls the repo, runs CMake,
  #  builds with make and logs any failures.
  #
- #  ────────────────────────────────────────────────────────
- #  Dependencies:
- #    • curl        (for GitHub API)
- #    • jq          (JSON parser)
- #    • git         (clone / pull)
- #    • cmake       (configure)
- #    • make        (build)
  #  ------------------------------------------------------------
 
  set -euo pipefail            # fail fast, treat unset vars as error

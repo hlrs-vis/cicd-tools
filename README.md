@@ -19,3 +19,7 @@ chmod +x build_check.sh
 ```shell
 GITHUB_REPO="Hansi/Wurstbrot" REPO_DIR="/home/hansi/$(basename "$GITHUB_REPO")" BUILD_DIR="$REPO_DIR/build" RECIPIENTS="wurst@hans.com" LOG_FILE="/tmp/build_wurstbrot_check.sh" ./bin/build_check.sh
 ```
+
+```shell
+GITHUB_REPO="other/repo" CMAKE_CONFIG="-DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_COMPILER=clang++" ./bin/build_check.sh
+```

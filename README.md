@@ -16,4 +16,6 @@ chmod +x build_check.sh
 ```
 ### Further configuration without modification
 
+```shell
 GITHUB_REPO="Hansi/Wurstbrot" REPO_DIR="/home/hansi/$(basename "$GITHUB_REPO")" BUILD_DIR="$REPO_DIR/build" RECIPIENTS="wurst@hans.com" LOG_FILE="/tmp/build_wurstbrot_check.sh" ./bin/build_check.sh
+```

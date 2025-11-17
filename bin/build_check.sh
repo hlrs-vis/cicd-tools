@@ -46,7 +46,7 @@
  JOBS=${JOBS:-12}
  
  # ----- CMake -----
- CMAKE_CONFIG="${CMAKE_CONFIG:--DCMAKE_BUILD_TYPE=Release}"
+ CMAKE_CONFIG="${CMAKE_CONFIG:-}"
 
  #########################
  ## Helper functions

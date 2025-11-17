@@ -44,6 +44,9 @@
  BUILD_DIR="${BUILD_DIR:-$REPO_DIR/build}"
  LOG_FILE="${LOG_FILE:-/tmp/build_check.log}"
  JOBS=${JOBS:-12}
+ 
+ # ----- CMake -----
+ CMAKE_CONFIG="${CMAKE_CONFIG:--DCMAKE_BUILD_TYPE=Release}"
 
  #########################
  ## Helper functions
@@ -91,7 +94,7 @@
      pushd "$BUILD_DIR"
 
      # ---- CMake configure ----
-     if ! cmake .. >>"$LOG_FILE" 2>&1; then
+     if ! cmake ${CMAKE_CONFIG} .. >>"$LOG_FILE" 2>&1; then
          log "❌ CMake configuration failed. Check $LOG_FILE for details."
          popd
          return 1

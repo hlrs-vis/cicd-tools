@@ -38,4 +38,6 @@ GITHUB_REPO="other/repo" CMAKE_CONFIG="-DCMAKE_BUILD_TYPE=Release -DCMAKE_CXX_CO
 
 e.g. Postfix mail client
 
+```shell
 GITHUB_REPO="other/repo" MAIL_CLIENT_SYNTAX="sendmail -t" ./bin/build_check.sh
+```

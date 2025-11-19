@@ -28,7 +28,6 @@
 
  # ----- GitHub details -----
  GITHUB_REPO="${GITHUB_REPO:-user/repo}"     # <--- change to your repo
- RECIPIENTS="${RECIPIENTS:-e@mail.com}"
  API_TOKEN="${GITHUB_API_TOKEN:-}"   # optional PAT (needs repo:status)
  BASE_URL="${BASE_URL:-https://api.github.com}"
 
@@ -40,6 +39,12 @@
  
  # ----- CMake -----
  CMAKE_CONFIG="${CMAKE_CONFIG:-}"
+ 
+ # ----- Mail -----
+ RECIPIENTS="${RECIPIENTS:-e@mail.com}"
+ MAIL_CLIENT_SYNTAX="${MAIL_CLIENT_SYNTAX:-}"
+# e.g. postfix syntax
+#  MAIL_CLIENT_SYNTAX="{MAIL_CLIENT_SYNTAX:-sendmail -t}"
 
  #########################
  ## Helper functions
@@ -108,7 +113,7 @@ send_email() {
     local subject="$1"
     local body="$2"
 
-    echo "$body" | mailx -s "$subject" $RECIPIENTS
+    echo "Subject: $subject\n\n$body" | $MAIL_CLIENT_SYNTAX $RECIPIENTS
 }
 
  #########################
@@ -142,13 +147,13 @@ send_email() {
 
  # If the checks passed, run local build
  if ! configure_and_build; then
-     exit 1
-     # send_email "✅ Build succeeded on $(hostname)" \
-     #     "The daily build for ${GITHUB_REPO} finished successfully.\n\nSee $LOG_FILE for details."
+    send_email "❌ Build FAILED on $(hostname)" \
+    	"Something went wrong during the nightly build of ${GITHUB_REPO}.\nCheck $LOG_FILE for details."
+    exit 1
  fi
  # else
-     # send_email "❌ Build FAILED on $(hostname)" \
-     #     "Something went wrong during the nightly build of ${GITHUB_REPO}.\nCheck $LOG_FILE for details."
+     # send_email "✅ Build succeeded on $(hostname)" \
+     #     "The daily build for ${GITHUB_REPO} finished successfully.\n\nSee $LOG_FILE for details."
  # fi
 
  log "🎉 All steps completed successfully."

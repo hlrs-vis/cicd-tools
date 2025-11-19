@@ -22,6 +22,8 @@ and run it:
 chmod +x build_check.sh
 ./build_check.sh
 ```
+Another approach is to build a wrapper script which calls this script with additional configuration parameter. For more information about the configuration, see the section [Further configuration](#further-configuration) .
+
 ### Further configuration
 
 #### Adjust general config

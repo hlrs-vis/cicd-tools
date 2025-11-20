@@ -53,36 +53,36 @@ MAIL_CLIENT_SYNTAX="${MAIL_CLIENT_SYNTAX:-}"
 ## Helper functions
 #########################
 print_last_result() {
-	if [[ -f "$LOG_FILE" ]]; then
-		tail -n 1 "$LOG_FILE"
+	if [[ -f "${LOG_FILE}" ]]; then
+		tail -n 1 "${LOG_FILE}"
 	else
 		echo "No log file found. Have you run the script yet?"
 	fi
 }
 
-log() { echo "$(date '+%Y-%m-%d %H:%M:%S') $*" >>"$LOG_FILE"; }
+log() { echo "$(date '+%Y-%m-%d %H:%M:%S') $*" >>"${LOG_FILE}"; }
 
 check_github_status() {
 	# 1️⃣ Get the latest workflow run for the default branch
-	local branch=$(git -C "$REPO_DIR" rev-parse --abbrev-ref HEAD)
+	local branch=$(git -C "${REPO_DIR}" rev-parse --abbrev-ref HEAD)
 	local runs_url="${BASE_URL}/repos/${GITHUB_REPO}/actions/runs?branch=${branch}&per_page=1"
 	local resp
-	if [[ -n $API_TOKEN ]]; then
-		resp=$(curl -sSLH "Authorization: token ${API_TOKEN}" "$runs_url")
+	if [[ -n ${API_TOKEN} ]]; then
+		resp=$(curl -sSLH "Authorization: token ${API_TOKEN}" "${runs_url}")
 	else
-		resp=$(curl -sSL "$runs_url")
+		resp=$(curl -sSL "${runs_url}")
 	fi
 
 	# 2️⃣ Extract the conclusion (success / failure / etc.)
 	local conclusion
-	conclusion=$(echo "$resp" | jq -r '.workflow_runs[0].conclusion')
-	if [[ $conclusion == "null" ]]; then
-		log "❌ No completed run found for branch '$branch'."
+	conclusion=$(echo "${resp}" | jq -r '.workflow_runs[0].conclusion')
+	if [[ ${conclusion} == "null" ]]; then
+		log "❌ No completed run found for branch '${branch}'."
 		return 1
 	fi
 
-	if [[ $conclusion != "success" ]]; then
-		log "⚠️  Latest run concluded with: $conclusion."
+	if [[ ${conclusion} != "success" ]]; then
+		log "⚠️  Latest run concluded with: ${conclusion}."
 		return 1
 	fi
 
@@ -91,20 +91,20 @@ check_github_status() {
 }
 
 configure_and_build() {
-	mkdir -p "$BUILD_DIR"
-	pushd "$BUILD_DIR"
+	mkdir -p "${BUILD_DIR}"
+	pushd "${BUILD_DIR}"
 
 	# ---- CMake configure ----
-	if ! cmake ${CMAKE_CONFIG} .. >>"$LOG_FILE" 2>&1; then
-		log "❌ CMake configuration failed. Check $LOG_FILE for details."
+	if ! cmake ${CMAKE_CONFIG} .. >>"${LOG_FILE}" 2>&1; then
+		log "❌ CMake configuration failed. Check ${LOG_FILE} for details."
 		popd
 		return 1
 	fi
 	log "✅ CMake configuration succeeded."
 
 	# ---- Build with make ----
-	if ! make -j$JOBS >>"$LOG_FILE" 2>&1; then
-		log "❌ Make build failed. See $LOG_FILE."
+	if ! make -j${JOBS} >>"${LOG_FILE}" 2>&1; then
+		log "❌ Make build failed. See ${LOG_FILE}."
 		popd
 		return 1
 	fi
@@ -116,16 +116,16 @@ send_email() {
 	local subject="$1"
 	local body="$2"
 
-	echo "Subject: $subject\n\n$body" | $MAIL_CLIENT_SYNTAX $RECIPIENTS
+	echo "Subject: ${subject}\n\n${body}" | ${MAIL_CLIENT_SYNTAX} ${RECIPIENTS}
 }
 
 #########################
 ## Main flow
 #########################
 
-if $SHOW_SUCCESS; then
+if ${SHOW_SUCCESS}; then
 	print_last_result
-	if grep -q "✅" "$LOG_FILE"; then
+	if grep -q "✅" "${LOG_FILE}"; then
 		exit 0 # success
 	else
 		exit 1 # failure or unknown
@@ -133,15 +133,15 @@ if $SHOW_SUCCESS; then
 fi
 
 # If the repo dir does not exist, clone it first
-if [[ ! -d "$REPO_DIR/.git" ]]; then
-	log "⚙️  Cloning repository $GITHUB_REPO into $REPO_DIR"
-	git clone --recursive "https://github.com/${GITHUB_REPO}.git" "$REPO_DIR"
+if [[ ! -d "${REPO_DIR}/.git" ]]; then
+	log "⚙️  Cloning repository ${GITHUB_REPO} into ${REPO_DIR}"
+	git clone --recursive "https://github.com/${GITHUB_REPO}.git" "${REPO_DIR}"
 fi
 
 # Pull the latest changes
 log "🔄 Pulling latest commits."
-git -C "$REPO_DIR" fetch --all
-git -C "$REPO_DIR" reset --hard origin/$(git -C "$REPO_DIR" rev-parse --abbrev-ref HEAD)
+git -C "${REPO_DIR}" fetch --all
+git -C "${REPO_DIR}" reset --hard origin/$(git -C "${REPO_DIR}" rev-parse --abbrev-ref HEAD)
 
 # Check GitHub build status
 if ! check_github_status; then
@@ -151,7 +151,7 @@ fi
 # If the checks passed, run local build
 if ! configure_and_build; then
 	send_email "❌ Build FAILED on $(hostname)" \
-		"Something went wrong during the nightly build of ${GITHUB_REPO}.\nCheck $LOG_FILE for details."
+		"Something went wrong during the nightly build of ${GITHUB_REPO}.\nCheck ${LOG_FILE} for details."
 	exit 1
 fi
 # else

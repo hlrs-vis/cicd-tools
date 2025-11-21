@@ -6,8 +6,9 @@ This project is a collection of CI/CD tools/scripts primarily used in closed env
 1. Fork the Repository: Create your own fork of this repository
 2. Clone Locally: Clone your fork to your local machine
 3. Make Changes: Implement improvements or fixes to any of the scripts/tools
-4. Test Your Changes: Ensure that your changes work properly in a closed environment context (as per the README)
-5. Submit Pull Request: Open a pull request with your changes
+4. Test Your Changes: Ensure that your changes work properly in a closed environment context
+5. Document: Write down how to use your tool in the README.md
+6. Submit Pull Request: Open a pull request with your changes
 
 ## Code Standards
 - Follow shell scripting best practices for bash scripts

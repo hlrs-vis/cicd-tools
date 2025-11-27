@@ -150,7 +150,7 @@ fi
 
 # If the checks passed, run local build
 if ! configure_and_build; then
-	send_email "❌ Build FAILED on $(hostname)" \
+	send_email "Build FAILED on $(hostname)" \
 		"Something went wrong during the nightly build of ${GITHUB_REPO}.\nCheck ${LOG_FILE} for details."
 	exit 1
 fi

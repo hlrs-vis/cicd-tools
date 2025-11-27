@@ -116,7 +116,7 @@ send_email() {
 	local subject="$1"
 	local body="$2"
 
-	echo "Subject: ${subject}\n\n${body}" | ${MAIL_CLIENT_SYNTAX} ${RECIPIENTS}
+	printf "Subject: ${subject}\n\n${body}" | ${MAIL_CLIENT_SYNTAX} ${RECIPIENTS}
 }
 
 #########################

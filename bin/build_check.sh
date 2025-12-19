@@ -33,6 +33,7 @@ done
 GITHUB_REPO="${GITHUB_REPO:-user/repo}" # <--- change to your repo
 API_TOKEN="${GITHUB_API_TOKEN:-}"       # optional PAT (needs repo:status)
 BASE_URL="${BASE_URL:-https://api.github.com}"
+UPDATE_SUBMODULES=${UPDATE_SUBMODULES:-false}
 
 # ----- Build directories -----
 REPO_DIR="${REPO_DIR:-/path/to/repo/$(basename "$GITHUB_REPO")}"
@@ -142,6 +143,10 @@ fi
 log "🔄 Pulling latest commits."
 git -C "${REPO_DIR}" fetch --all
 git -C "${REPO_DIR}" reset --hard origin/$(git -C "${REPO_DIR}" rev-parse --abbrev-ref HEAD)
+if ${UPDATE_SUBMODULES}; then
+    git submodule sync --recursive
+    git submodule update --init --recursive
+fi
 
 # Check GitHub build status
 if ! check_github_status; then

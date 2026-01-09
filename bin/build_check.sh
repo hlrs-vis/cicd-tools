@@ -144,8 +144,8 @@ log "🔄 Pulling latest commits."
 git -C "${REPO_DIR}" fetch --all
 git -C "${REPO_DIR}" reset --hard origin/$(git -C "${REPO_DIR}" rev-parse --abbrev-ref HEAD)
 if ${UPDATE_SUBMODULES}; then
-    git submodule sync --recursive
-    git submodule update --init --recursive
+    git -C "${REPO_DIR}" submodule sync --recursive
+    git -C "${REPO_DIR}" submodule update --init --recursive
 fi
 
 # Check GitHub build status

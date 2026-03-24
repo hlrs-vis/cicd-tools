@@ -155,9 +155,18 @@ fi
 
 # If the checks passed, run local build
 if ! configure_and_build; then
-	send_email "Build FAILED on $(hostname)" \
-		"Something went wrong during the nightly build of ${GITHUB_REPO}.\nCheck ${LOG_FILE} for details."
-	exit 1
+
+	if ! rm -rf "${BUILD_DIR}"; then
+		send_email "Build FAILED on $(hostname)" \
+			"Something went wrong during the nightly build of ${GITHUB_REPO}. A clean build could not be tried.\nCheck ${LOG_FILE} for details."
+		exit 1
+	fi
+
+	if ! configure_and_build; then
+		send_email "Build FAILED on $(hostname)" \
+			"Something went wrong during the nightly build of ${GITHUB_REPO}, even after a clean build.\nCheck ${LOG_FILE} for details."
+		exit 1
+	fi
 fi
 # else
 # send_email "✅ Build succeeded on $(hostname)" \
